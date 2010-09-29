@@ -898,7 +898,7 @@ class DirectoryStorage(EmailStorage):
                 except:
                     self.notifier.handleError(_("Error while reading MessageID from stored message"))
         else:
-            fr = file(cache, 'rub')
+            fr = file(cache, 'r')
             for line in fr:
                 try:
                     items = line.strip().split(None, 1)
@@ -917,7 +917,7 @@ class DirectoryStorage(EmailStorage):
         fn = self.idsFilename()
         if os.path.exists(fn):
             os.remove(fn)
-        fw = file(fn, 'wub')
+        fw = file(fn, 'w')
         for msg_iid, msg_fn in sorted(self.message_iid2fn.items(), key=lambda item: item[1]):
             try:
                 line = '%s\t%s' % (msg_fn, msg_iid)
@@ -1015,7 +1015,7 @@ class DirectoryStorage(EmailStorage):
         fn = self.labelFilename()
         self.message_iid2labels = {}
         if os.path.isfile(fn):
-            fr = codecs.open(fn, 'rub', 'utf-8')
+            fr = codecs.open(fn, 'r', 'utf-8')
             for line in fr:
                 items = line.split(None, 1)
                 msg_fn = items[0]
@@ -1029,7 +1029,7 @@ class DirectoryStorage(EmailStorage):
         fn = self.labelFilename()
         if os.path.exists(fn):
             os.remove(fn)
-        fw = codecs.open(fn, 'wub', 'utf-8')
+        fw = codecs.open(fn, 'w', 'utf-8')
         for msg_iid, labels in sorted(self.message_iid2labels.items()):
             msg_fn = self.message_iid2fn.get(msg_iid)
             if msg_fn is None:
@@ -1041,7 +1041,7 @@ class DirectoryStorage(EmailStorage):
     def lastStamp(self):
         stampFile = self.stampFile()
         try:
-            fr = file(stampFile, 'ru')
+            fr = file(stampFile, 'r')
             for line in fr:
                 last_time = line.strip()
                 break
@@ -1062,7 +1062,7 @@ class DirectoryStorage(EmailStorage):
         stampFile = self.stampFile()
         if os.path.exists(stampFile):
             os.remove(stampFile)
-        fw = file(stampFile, 'wu')
+        fw = file(stampFile, 'w')
         print >> fw, last_time
         fw.close()
 
