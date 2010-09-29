@@ -20,7 +20,7 @@ InstallDirRegKey HKLM "Software\GmailBackup" "Install_Dir"
 Var StartMenuFolder
 
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE "LICENSE.TXT"
+!insertmacro MUI_PAGE_LICENSE "LICENSE"
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_STARTMENU "Application" $StartMenuFolder

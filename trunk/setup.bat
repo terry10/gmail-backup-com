@@ -2,10 +2,9 @@
 
 
 ::Set personal Path to the Apps:
-set PythonEXE="C:\Python25\python.exe"
-set PYTHONHOME=C:\Python25
+set PythonEXE="C:\Python26\python.exe"
+set PYTHONHOME=C:\Python26
 set SevenZipEXE="C:\Program Files\7-Zip\7z.exe"
-set UpxEXE="C:\Program Files\upx302w\upx.exe"
 set MakeNSIS="C:\Program Files\NSIS\makensis.exe"
 
 
@@ -35,8 +34,8 @@ xcopy dist\*.* "dist_EXE\" /d /y
 rd dist /s /q
 
 ::copy gmb.ico "dist_EXE\" /d /y
-copy %PYTHONHOME%\Lib\site-packages\wx-2.8-msw-unicode\wx\msvcp71.dll "dist_EXE\" /d /y
-copy %SystemRoot%\msvcp71.dll "dist_EXE\" /d /y
+rem copy %PYTHONHOME%\Lib\site-packages\wx-2.8-msw-unicode\wx\msvcp71.dll "dist_EXE\" /d /y
+rem copy %SystemRoot%\msvcp71.dll "dist_EXE\" /d /y
 
 md dist_EXE\messages
 md dist_EXE\messages\cs_CZ
@@ -79,7 +78,6 @@ goto:eof
         rd "dist_EXE\library" /s /q
 
         cd dist_EXE\
-        %UpxEXE% --best *.*
 goto:eof
 
 

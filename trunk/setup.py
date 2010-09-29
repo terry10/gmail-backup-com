@@ -38,6 +38,7 @@ setup(
     windows = [{'script': 'gmail-backup-gui.py', 'icon_resources': [(1, 'gmb.ico')]}],
     options = {'py2exe':
                     {'optimize': 2,
+                     "dll_excludes": ["msvcp90.dll"],
                     }
               },
     data_files = [
