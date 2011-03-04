@@ -685,7 +685,7 @@ Possible causes are:
         return False
 
     def fetchMessageId(self, num):
-        typ, data = self._call(self.con.fetch, num, '(BODY[HEADER.FIELDS (Message-ID)])')
+        typ, data = self._call(self.con.fetch, num, '(BODY.PEEK[HEADER.FIELDS (Message-ID)])')
         if data is None or data[0] is None:
             match = None
         else:
@@ -706,7 +706,7 @@ Possible causes are:
         if self._lastFetched == num:
             return self._lastFetchedMsg
         else:
-            typ, data = self._call(self.con.fetch, num, '(RFC822)')
+            typ, data = self._call(self.con.fetch, num, '(BODY.PEEK[])')
             mail = data[0][1]
             self._lastFetched = num
             self._lastFetchedMsg = mail

@@ -1,2 +1,2 @@
 #!/bin/bash
-exec python2.5 -O gmail-backup.pyo $@
+exec python gmail-backup.py $@
