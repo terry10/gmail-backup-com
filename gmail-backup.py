@@ -112,10 +112,14 @@ another ZIP file instead of the Windows binary "gmail-backup.exe".
 Error reporting:
 ================
 
-If you want to report some errors in this software, please use our forum at
-http://www.gmail-backup.com/forum . To speed up the solution of your problem,
-please run the program with --debug command line option and include full
-traceback of the error. Include also the version of GMail Backup you have used.
+If you want to report some errors in this software, please use our user support 
+mailing list:
+
+gmail-backup-com-users@googlegroups.com
+
+To speed up the solution of your problem, please run the program with --debug
+command line option and include full traceback of the error. Include also the
+version of GMail Backup you have used.
 Thanks.
 '''
 
@@ -204,7 +208,11 @@ Thanks.
         
         Usefull for debugging and for gathering information about new supported
         language. If your GMail language is not supported, don't hesitate and
-        write us to honza.svec@gmail.com.'''
+        write us to user support group:
+            
+            gmail-backup-com-users@googlegroups.com
+
+        '''
         self.notifier = ConsoleNotifier()
         b = GMailBackup(username, password, self.notifier)
         for item, n_messages in b.list():

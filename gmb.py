@@ -633,7 +633,10 @@ Possible causes are:
 
   gmail-backup.exe list <your_address@gmail.com> <your_password>
 
-  and send the output of this command at info@gmail-backup.com.
+  and send the output of this command to our user support group:
+
+  gmail-backup-com-users@googlegroups.com
+
   Thank you''')
         raise ValueError("Cannot access IMAP folders")
 
@@ -1389,7 +1392,6 @@ class GMailBackup(object):
                 if version_match:
                     try:
                         new_revision = int(version_match.group(1))
-                        print new_revision
                         if new_revision > int(GMB_REVISION):
                             return new_revision, url
                     except ValueError:
