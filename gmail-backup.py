@@ -26,8 +26,8 @@ from svc.scripting import *
 from gmb import ConsoleNotifier, _convertTime, GMailBackup, GMB_REVISION, GMB_DATE, imap_decode, imap_encode
 import sys
 
-GMB_CMD_REVISION = u'$Revision: 712 $'
-GMB_CMD_DATE = u'$Date: 2010-09-29 11:53:50 +0200 (St, 29 zář 2010) $'
+GMB_CMD_REVISION = u'$Revision$'
+GMB_CMD_DATE = u'$Date$'
 
 GMB_CMD_REVISION = GMB_CMD_REVISION[11:-2]
 GMB_CMD_DATE = GMB_CMD_DATE[7:-2].split()[0]

@@ -44,8 +44,8 @@ import locale
 import ctypes
 import gettext
 
-GMB_GUI_REVISION = u'$Revision: 712 $'
-GMB_GUI_DATE = u'$Date: 2010-09-29 11:53:50 +0200 (St, 29 zář 2010) $'
+GMB_GUI_REVISION = u'$Revision$'
+GMB_GUI_DATE = u'$Date$'
 
 GMB_GUI_REVISION = GMB_GUI_REVISION[11:-2]
 GMB_GUI_DATE = GMB_GUI_DATE[7:-2].split()[0]

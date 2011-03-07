@@ -61,8 +61,8 @@ try:
 except ImportError:
     from md5 import md5
 
-GMB_REVISION = u'$Revision: 712 $'
-GMB_DATE = u'$Date: 2010-09-29 11:53:50 +0200 (St, 29 zář 2010) $'
+GMB_REVISION = u'$Revision$'
+GMB_DATE = u'$Date$'
 
 GMB_REVISION = GMB_REVISION[11:-2]
 GMB_DATE = GMB_DATE[7:-2].split()[0]
@@ -72,7 +72,7 @@ SOCKET_TIMEOUT = 60 # timeout for socket operations
 
 MAX_LABEL_RETRIES = 5
 
-VERSION_URL = 'http://www.gmail-backup.com/files/version.txt'
+VERSION_URL = 'http://code.google.com/p/gmail-backup-com/source/list'
 
 SLEEP_FOR = 20 # After network error sleep for X seconds
 MAX_TRY = 5 # Maximum number of reconnects
@@ -1383,14 +1383,18 @@ class GMailBackup(object):
         try:
             fr = urllib.urlopen(VERSION_URL)
             try:
-                lines = fr.readlines()
-                revision = int(lines[0])
-                version = lines[1].strip()
-                url = lines[2].strip()
-                if revision > int(GMB_REVISION):
-                    return version, url
-                else:
-                    return None, None
+                data = fr.read()
+                url = 'http://code.google.com/p/gmail-backup-com/downloads/list'
+                version_match = re.search('<td class="id"><a href=".*?">r(\d+)</a></td>', data)
+                if version_match:
+                    try:
+                        new_revision = int(version_match.group(1))
+                        print new_revision
+                        if new_revision > int(GMB_REVISION):
+                            return new_revision, url
+                    except ValueError:
+                        pass
+                return None, None
             finally:
                 fr.close()
         except:
