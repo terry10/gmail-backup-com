@@ -31,18 +31,19 @@ import time
 import imaplib
 
 import wx
+import wx.html
 import wx.lib.dialogs
 import wx.lib.newevent
 
 
 import gmb as gmail_backup
-import dialogues
-import settings
 
 import locale
 
 import ctypes
 import gettext
+
+import pickle
 
 GMB_GUI_REVISION = u'$Revision$'
 GMB_GUI_DATE = u'$Date$'
@@ -342,22 +343,22 @@ You can write them either as $YEAR or ${YEAR}.'''))
             self.before.Enable()
             
     def saveSettings(self):
-        settings.settings["login"] = self.login.GetValue()
-        settings.settings["folder"] = self.folder.GetValue()
-        settings.settings["onlyNewest"] = str(self.onlyNewest.GetValue())
-        settings.settings["since"] = str(self.since.GetValue().FormatISODate())
-        settings.settings["before"] = str(self.before.GetValue().FormatISODate())
+        settings["login"] = self.login.GetValue()
+        settings["folder"] = self.folder.GetValue()
+        settings["onlyNewest"] = str(self.onlyNewest.GetValue())
+        settings["since"] = str(self.since.GetValue().FormatISODate())
+        settings["before"] = str(self.before.GetValue().FormatISODate())
 
-        settings.save()
+        saveSettings()
         
         return
     
     def restoreSettings(self):
         #read and set
-        self.login.SetValue(settings.settings["login"].strip())
-        self.folder.SetValue(settings.settings["folder"].strip())
+        self.login.SetValue(settings["login"].strip())
+        self.folder.SetValue(settings["folder"].strip())
         
-        if settings.settings["onlyNewest"].strip() == "True":
+        if settings["onlyNewest"].strip() == "True":
             self.onlyNewest.SetValue(True)
             self.since.Disable()
             self.before.Disable()
@@ -367,8 +368,8 @@ You can write them either as $YEAR or ${YEAR}.'''))
             self.before.Enable()
         
         try:
-            self.since.SetValue(self.readDate(settings.settings["since"]))
-            self.before.SetValue(self.readDate(settings.settings["before"]))
+            self.since.SetValue(self.readDate(settings["since"]))
+            self.before.SetValue(self.readDate(settings["before"]))
         except:
             pass
             
@@ -589,7 +590,7 @@ class MainDialog(wx.Frame):
         self.Centre();
         
     def OnAbout(self, event):
-        dlg = dialogues.AboutBox(MAX_REVISION, MAX_DATE)
+        dlg = AboutBox(MAX_REVISION, MAX_DATE)
         dlg.ShowModal()
         dlg.Destroy()  
         
@@ -598,14 +599,131 @@ class MainDialog(wx.Frame):
     def OnHelp(self, event):
         return True
   
+aboutText = """
+<p align="center">
+    <b>Gmail Backup</b> 
+    <br>
+    <br>
+    revision %(revision)s (%(revisiondate)s)
+</p>
 
+<p>
+The purpose of this program is to simplify 
+the process of backing up, restoration, or  
+migration of your emails from your Gmail Account.
+</p>
+
+<p>
+Copyright (C) 2008-2011 by Jan Svec and Filip Jurcicek
+</p>
+
+<p>
+See <a href="http://code.google.com/p/gmail-backup-com/">http://code.google.com/p/gmail-backup-com/</a>
+</p>
+""" 
+
+class HtmlWindow(wx.html.HtmlWindow):
+    def __init__(self, parent, id, size=(600,400)):
+        wx.html.HtmlWindow.__init__(self,parent, id, size=size)
+        if "gtk2" in wx.PlatformInfo:
+            self.SetStandardFonts()
+
+    def OnLinkClicked(self, link):
+        wx.LaunchDefaultBrowser(link.GetHref())
+        
+
+class AboutBox(wx.Dialog):
+    def __init__(self,  MAX_REVISION, MAX_DATE):
+        wx.Dialog.__init__(self, None, -1, "About Gmail Backup",
+            style=wx.DEFAULT_DIALOG_STYLE|wx.THICK_FRAME|wx.RESIZE_BORDER|
+                wx.TAB_TRAVERSAL)
+
+        colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOW)
+        self.SetBackgroundColour(colour)
+        
+        szrVertical = wx.BoxSizer(wx.VERTICAL)
+
+        hwin = HtmlWindow(self, -1, size=(400,200))
+        vers = {}
+        vers["revision"] = MAX_REVISION
+        vers["revisiondate"] = MAX_DATE
+        hwin.SetPage(_(aboutText) % vers)
+        irep = hwin.GetInternalRepresentation()
+        hwin.SetSize((irep.GetWidth()+25, irep.GetHeight()+20))
+        self.SetClientSize(hwin.GetSize())
+
+        self.btnOk = wx.Button(self,  wx.ID_OK,  _("Ok"))
+        szrVertical.Add(hwin, 0, wx.ALIGN_CENTER|wx.ALL, 15)
+        szrVertical.Add(self.btnOk, 0, wx.ALIGN_CENTER|wx.BOTTOM, 15)
+        
+        self.SetSizer(szrVertical)
+        self.SetAutoLayout(True)
+        szrVertical.Fit(self)
+
+        self.CentreOnParent(wx.BOTH)
+        self.SetFocus()
+
+import collections
+
+# in this dictionary we store all settings
+settings = collections.defaultdict(str)
+
+def settingsFn():
+    """Generate a platform dependent config file."""
+    c_dir = os.path.dirname(sys.argv[0])
+    c_cfg = os.path.join(c_dir, 'gmail-backup-gui.cfg')
+    if os.path.isfile(c_cfg):
+        return c_cfg
+
+    if os.name == 'nt':
+        appdata = os.environ['APPDATA']
+        fn = os.path.join(appdata, 'Gmail Backup')
+    else:
+        fn = os.path.expanduser(os.path.join('~', '.gmb'))
+    fn = os.path.join(fn, 'settings')
+    return fn
+
+def settingsMakedirs():
+    """Create needed directries to store the config file."""
+    
+    fn = settingsFn()
+    dn = os.path.dirname(fn)
+    if not os.path.isdir(dn):
+        os.makedirs(dn)
+
+def saveSettings():
+    """Save the settings dictionary by pickle module."""
+    
+    try:
+        settings_fn = settingsFn()
+        settingsMakedirs()
+        fl = open(settings_fn, "wb")
+        pickle.dump(settings, fl)
+        fl.close()
+    except:
+        pass
+    
+def loadSettings():
+    """Load the settings dictionary by pickle module."""
+    global settings
+    
+    try:
+        settings_fn = settingsFn()
+        settingsMakedirs()
+        fl = open(settings_fn, "rb")
+        settings = pickle.load(fl)
+        fl.close()
+    except:
+        # no settings yet
+        pass
+       
         
 #############################################################################
 ## test of dialogue
 #############################################################################
 if __name__ == "__main__":
     # load the settings when module is initialised
-    settings.load()
+    loadSettings()
     
     app = wx.PySimpleApp()
     

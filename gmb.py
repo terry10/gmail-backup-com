@@ -438,7 +438,7 @@ class ConsoleNotifier(GBNotifier):
 
     def nExceptionMsg(self, msg, type, error, tb):
         t = ''.join(traceback.format_exception(type, error, tb))
-        self.nError(_("%s\nIgnoring this error message.\nIf you want, please report the following traceback at www.gmail-backup.com/forum\nThanks! (gmb.py revision %s):\n%s") % (msg, GMB_REVISION, t))
+        self.nError(_("%s\nIgnoring this error message.\nIf you want, please report the following traceback to gmail-backup-com-users@googlegroups.com \nThanks! (gmb.py revision %s):\n%s") % (msg, GMB_REVISION, t))
 
     def handleError(self, msg):
         e_type, e_value, e_tb = sys.exc_info()

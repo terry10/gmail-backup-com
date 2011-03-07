@@ -10,3 +10,5 @@ mkdir -p dist_SH/messages/cs_CZ/LC_MESSAGES
 cp messages/cs_CZ/LC_MESSAGES/gmail-backup.mo dist_SH/messages/cs_CZ/LC_MESSAGES/gmail-backup.mo
 cp messages/cs_CZ.po dist_SH/messages/cs_CZ.po
 cp -r svc dist_SH
+rm -rf dist_SH/svc/.svn
+rm -rf dist_SH/svc/scripting/.svn
