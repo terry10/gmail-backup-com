@@ -240,7 +240,7 @@ msgstr "Mimo datum %4.1f%%: %s - %s"
 
 #: gmb.py:388
 msgid "Starting backup of labels"
-msgstr "Začáním zálohu štítků"
+msgstr "Začínám zálohu štítků"
 
 #: gmb.py:390
 msgid "Backup of labels ended"
