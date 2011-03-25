@@ -390,11 +390,11 @@ class ConsoleNotifier(GBNotifier):
 
     def nEmailBackup(self, from_address, subject, num, total):
         self._percentage = float(num)/total*100
-        self.uprint(_("Stored %4.1f%%: %s - %s") % (self._percentage, from_address, subject))
+        self.uprint(_("Stored %4.1f%% (%d of %d): %s - %s") % (self._percentage, num, total, from_address, subject))
 
     def nEmailBackupSkip(self, num, total, skipped, total_to_skip):
         self._percentage = float(num)/total*100
-        self.uprint(_("Skip   %4.1f%%: message already stored (%d of %d)") % (self._percentage, skipped, total_to_skip,))
+        self.uprint(_("Skip   %4.1f%% (%d of %d): message already stored") % (self._percentage, num, total))
 
     def nEmailRestore(self, from_address, subject, num, total):
         self._percentage = float(num)/total*100
